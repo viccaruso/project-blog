@@ -11,6 +11,7 @@ async function Home() {
     ...post,
     id: crypto.randomUUID(),
   }));
+
   return (
     <div className={styles.wrapper}>
       <h1 className={styles.mainHeading}>Latest Content:</h1>

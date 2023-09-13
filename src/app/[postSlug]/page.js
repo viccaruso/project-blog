@@ -3,22 +3,24 @@ import React from 'react';
 import BlogHero from '@/components/BlogHero';
 
 import styles from './postSlug.module.css';
+import { MDXRemote } from 'next-mdx-remote/rsc';
+import { loadBlogPost } from '@/helpers/file-helpers';
+import Card from '@/components/Card';
 
-function BlogPost() {
+async function BlogPost({ params }) {
+  console.log(params);
+  const post = await loadBlogPost(params.postSlug);
+  console.log({ post });
+
   return (
-    <article className={styles.wrapper}>
+    <article>
       <BlogHero
-        title="Example post!"
-        publishedOn={new Date()}
+        title={post.frontmatter.title}
+        publishedOn={post.frontmatter.publishedOn}
       />
-      <div className={styles.page}>
-        <p>This is where the blog post will go!</p>
-        <p>
-          You will need to use <em>MDX</em> to render all of
-          the elements created from the blog post in this
-          spot.
-        </p>
-      </div>
+      <Card className={styles.page}>
+        <MDXRemote source={post.content} />
+      </Card>
     </article>
   );
 }

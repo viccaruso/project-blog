@@ -14,6 +14,10 @@ const DivisionGroupsDemo = dynamic(() =>
   import('@/components/DivisionGroupsDemo')
 );
 
+const CircularColorsDemo = dynamic(() =>
+  import('@/components/CircularColorsDemo')
+);
+
 export async function generateMetadata({ params }) {
   const { frontmatter } = await loadBlogPost(params.postSlug);
 
@@ -35,7 +39,11 @@ async function BlogPost({ params }) {
       <Card className={styles.page}>
         <MDXRemote
           source={post.content}
-          components={{ pre: CodeSnippet, DivisionGroupsDemo }}
+          components={{
+            pre: CodeSnippet,
+            DivisionGroupsDemo,
+            CircularColorsDemo,
+          }}
         />
       </Card>
     </article>

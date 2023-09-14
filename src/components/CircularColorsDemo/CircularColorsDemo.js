@@ -2,6 +2,7 @@
 import React from 'react';
 import clsx from 'clsx';
 import { Play, Pause, RotateCcw } from 'react-feather';
+import { LayoutGroup, motion } from 'framer-motion';
 
 import Card from '@/components/Card';
 import VisuallyHidden from '@/components/VisuallyHidden';
@@ -23,7 +24,7 @@ const initialState = {
 function CircularColorsDemo() {
   const [{ isPaused, selectedColor, secondsElapsed }, dispatch] =
     React.useReducer(reducer, initialState);
-
+  const id = React.useId();
   React.useEffect(() => {
     if (isPaused) return;
 
@@ -38,47 +39,55 @@ function CircularColorsDemo() {
   }, [isPaused]);
 
   return (
-    <Card as="section" className={styles.wrapper}>
-      <ul className={styles.colorsWrapper}>
-        {COLORS.map((color, index) => {
-          const isSelected = color.value === selectedColor.value;
+    <LayoutGroup>
+      <Card as="section" className={styles.wrapper}>
+        <ul className={styles.colorsWrapper}>
+          {COLORS.map((color, index) => {
+            const isSelected = color.value === selectedColor.value;
 
-          return (
-            <li className={styles.color} key={index}>
-              {isSelected && <div className={styles.selectedColorOutline} />}
-              <div
-                className={clsx(
-                  styles.colorBox,
-                  isSelected && styles.selectedColorBox
+            return (
+              <li className={styles.color} key={index}>
+                {isSelected && (
+                  <motion.div
+                    layoutId={`${id}-outline`}
+                    transition={{ type: 'spring', stiffness: 500, damping: 35 }}
+                    className={styles.selectedColorOutline}
+                  />
                 )}
-                style={{
-                  backgroundColor: color.value,
-                }}
-              >
-                <VisuallyHidden>{color.label}</VisuallyHidden>
-              </div>
-            </li>
-          );
-        })}
-      </ul>
+                <div
+                  className={clsx(
+                    styles.colorBox,
+                    isSelected && styles.selectedColorBox
+                  )}
+                  style={{
+                    backgroundColor: color.value,
+                  }}
+                >
+                  <VisuallyHidden>{color.label}</VisuallyHidden>
+                </div>
+              </li>
+            );
+          })}
+        </ul>
 
-      <div className={styles.timeWrapper}>
-        <dl className={styles.timeDisplay}>
-          <dt>Time Elapsed</dt>
-          <dd>{secondsElapsed}</dd>
-        </dl>
-        <div className={styles.actions}>
-          <button onClick={() => dispatch({ type: 'toggle-paused' })}>
-            {isPaused ? <Play /> : <Pause />}
-            <VisuallyHidden>Play</VisuallyHidden>
-          </button>
-          <button onClick={() => dispatch({ type: 'reset' })}>
-            <RotateCcw />
-            <VisuallyHidden>Reset</VisuallyHidden>
-          </button>
+        <div className={styles.timeWrapper}>
+          <dl className={styles.timeDisplay}>
+            <dt>Time Elapsed</dt>
+            <dd>{secondsElapsed}</dd>
+          </dl>
+          <div className={styles.actions}>
+            <button onClick={() => dispatch({ type: 'toggle-paused' })}>
+              {isPaused ? <Play /> : <Pause />}
+              <VisuallyHidden>Play</VisuallyHidden>
+            </button>
+            <button onClick={() => dispatch({ type: 'reset' })}>
+              <RotateCcw />
+              <VisuallyHidden>Reset</VisuallyHidden>
+            </button>
+          </div>
         </div>
-      </div>
-    </Card>
+      </Card>
+    </LayoutGroup>
   );
 }
 

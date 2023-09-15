@@ -1,11 +1,20 @@
+import React from 'react';
+
+import { BLOG_TITLE } from '@/constants';
 import Link from 'next/link';
 
-export default function NotFound() {
+export const metadata = {
+  title: `404 Not found • ${BLOG_TITLE}`,
+};
+
+function NotFound() {
   return (
     <div>
-      <h2>Not Found</h2>
-      <p>Could not find requested resource</p>
-      <Link href="/">Return Home</Link>
+      <h1>404 Not Found</h1>
+      <p>This page does not exist. Please check the URL and try again.</p>
+      <Link href="/">Or click here to return home.</Link>
     </div>
   );
 }
+
+export default NotFound;

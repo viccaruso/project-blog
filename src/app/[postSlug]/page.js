@@ -20,29 +20,36 @@ const CircularColorsDemo = dynamic(() =>
 );
 
 export async function generateMetadata({ params }) {
-  try {
-    const { frontmatter } = await loadBlogPost(params.postSlug);
-    return {
-      title: `${frontmatter.title} • ${BLOG_TITLE}`,
-      description: `${frontmatter.abstract}`,
-    };
-  } catch (error) {
-    notFound();
-  }
+  const posts = await loadBlogPost(params.postSlug);
+
+  if (!posts) return null;
+
+  const { frontmatter } = posts;
+
+  return {
+    title: `${frontmatter.title} • ${BLOG_TITLE}`,
+    description: `${frontmatter.abstract}`,
+  };
 }
 
 async function BlogPost({ params }) {
   const post = await loadBlogPost(params.postSlug);
 
+  if (!post) {
+    notFound();
+  }
+
+  const { frontmatter, content } = post;
+
   return (
     <article>
       <BlogHero
-        title={post.frontmatter.title}
-        publishedOn={post.frontmatter.publishedOn}
+        title={frontmatter.title}
+        publishedOn={frontmatter.publishedOn}
       />
       <Card className={styles.page}>
         <MDXRemote
-          source={post.content}
+          source={content}
           components={{
             pre: CodeSnippet,
             DivisionGroupsDemo,

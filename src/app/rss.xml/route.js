@@ -5,8 +5,7 @@ export async function GET() {
   const posts = await getBlogPostList();
   const feed = new RSS({
     title: "Vic Caruso's Blog",
-    description:
-      "Personal blog created using Next.js with the guidance of Josh Comeau's course - The Joy of React",
+    description: 'Personal blog created using Next.js',
     copyright: 'Vic Caruso 2023',
     language: 'English',
     pubDate: new Date(),

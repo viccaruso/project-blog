@@ -2,6 +2,7 @@ import React from 'react';
 
 import styles from './postSlug.module.css';
 import dynamic from 'next/dynamic';
+import { notFound } from 'next/navigation';
 import { MDXRemote } from 'next-mdx-remote/rsc';
 import { loadBlogPost } from '@/helpers/file-helpers';
 import { BLOG_TITLE } from '@/constants';
@@ -19,12 +20,15 @@ const CircularColorsDemo = dynamic(() =>
 );
 
 export async function generateMetadata({ params }) {
-  const { frontmatter } = await loadBlogPost(params.postSlug);
-
-  return {
-    title: `${frontmatter.title} • ${BLOG_TITLE}`,
-    description: `${frontmatter.abstract}`,
-  };
+  try {
+    const { frontmatter } = await loadBlogPost(params.postSlug);
+    return {
+      title: `${frontmatter.title} • ${BLOG_TITLE}`,
+      description: `${frontmatter.abstract}`,
+    };
+  } catch (error) {
+    notFound();
+  }
 }
 
 async function BlogPost({ params }) {

@@ -2,6 +2,7 @@ import React from 'react';
 
 import styles from './postSlug.module.css';
 import dynamic from 'next/dynamic';
+import { notFound } from 'next/navigation';
 import { MDXRemote } from 'next-mdx-remote/rsc';
 import { loadBlogPost } from '@/helpers/file-helpers';
 import { BLOG_TITLE } from '@/constants';
@@ -19,7 +20,11 @@ const CircularColorsDemo = dynamic(() =>
 );
 
 export async function generateMetadata({ params }) {
-  const { frontmatter } = await loadBlogPost(params.postSlug);
+  const posts = await loadBlogPost(params.postSlug);
+
+  if (!posts) return null;
+
+  const { frontmatter } = posts;
 
   return {
     title: `${frontmatter.title} • ${BLOG_TITLE}`,
@@ -30,15 +35,21 @@ export async function generateMetadata({ params }) {
 async function BlogPost({ params }) {
   const post = await loadBlogPost(params.postSlug);
 
+  if (!post) {
+    notFound();
+  }
+
+  const { frontmatter, content } = post;
+
   return (
     <article>
       <BlogHero
-        title={post.frontmatter.title}
-        publishedOn={post.frontmatter.publishedOn}
+        title={frontmatter.title}
+        publishedOn={frontmatter.publishedOn}
       />
       <Card className={styles.page}>
         <MDXRemote
-          source={post.content}
+          source={content}
           components={{
             pre: CodeSnippet,
             DivisionGroupsDemo,
